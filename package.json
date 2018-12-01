@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node-sass sass/main.scss  css/style.css -w"    
+    "start": "index.js"    
   },
   "author": "",
   "license": "ISC",
