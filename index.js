@@ -18,8 +18,13 @@ app.use(
   })
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(
+  passport.initialize()
+);
+
+app.use(
+  passport.session()
+);
 
 require('./routes/authRoutes')(app); /* the require statement essentially
                                        returns the function from authRoutes.js,
