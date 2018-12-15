@@ -15,8 +15,8 @@ module.exports = (app) => {
 
   app.get(
     '/api/current-user', (req, res) => {
-    //res.send(req.user);
-    res.send(req.session);
+    res.send(req.user);  // put everything in the cookie
+    //res.send(req.session);  // use a session id instead
   });
 
   app.get(
