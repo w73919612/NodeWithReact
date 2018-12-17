@@ -41,8 +41,8 @@ passport.use(
                                                   and decide whether to use a PROD or DEV version, or we can set
                                                   another Google Strategy Property called proxy: true.
                                               */
-      callbackURL: keys.googleRedirectURI + '/auth/google/callback'
-      //proxy: true
+      callbackURL: keys.googleRedirectURI + '/auth/google/callback',
+      proxy: true
     },
     // (accessToken, refreshToken, profile, done) => {
     //   User.findOne({ googleId: profile.id})
