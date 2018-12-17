@@ -41,8 +41,8 @@ passport.use(
                                                   and decide whether to use a PROD or DEV version, or we can set
                                                   another Google Strategy Property called proxy: true.
                                               */
-      callbackURL: keys.googleRedirectURI + '/auth/google/callback',
-      proxy: true
+      callbackURL: keys.googleRedirectURI + '/auth/google/callback'
+      //proxy: true
     },
     // (accessToken, refreshToken, profile, done) => {
     //   User.findOne({ googleId: profile.id})
@@ -62,11 +62,12 @@ passport.use(
       const existingUser = await User.findOne({ googleId: profile.id});
       if (existingUser) {
         // user already exists
-        done(null, existingUser);
-      } else {
-        const user = await new User({ googleId: profile.id }).save()
-        done(null, user);
+        return done(null, existingUser);
       }
+
+      const user = await new User({ googleId: profile.id }).save()
+      done(null, user);
+
 
 
       //console.log('access token', accessToken);

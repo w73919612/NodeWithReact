@@ -10,10 +10,7 @@ module.exports = (app) => {
 
   app.get(
     '/auth/google/callback',
-    passport.authenticate('google'),
-    (req, res) => {
-      res.redirect('./surveys');
-    }
+    passport.authenticate('google')
   );  //GoogleStrategy has this thing where its looking for keyword 'google'
 
   app.get(
