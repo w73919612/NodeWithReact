@@ -35,7 +35,7 @@ require('./routes/billingRoutes')(app);
 if (process.env.NODE_ENV === 'production') {
   //Make sure that Express will serve up production assets.
   // like our main.js file, or our main.css file.
-  express.use(express.static('client/build'));
+  app.use(express.static('client/build'));
   const path = require('path');
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
