@@ -1,12 +1,13 @@
 const keys = require('../config/keys');
 const stripe = require('stripe')(keys.stripeSecretKey);
+const requireLogin = require('../middlewares/requireLogin');
 
 module.exports = app => {
-  if (!req.user) {
-    return res.status(401).send({ error: 'You must login!' })
-  }
   app.post(
-    '/api/stripe', async (req, res) => {
+    //For all the get,post, etc, we can pass in as many middlewares after then
+    // route, as long as eventually at least one of them gets called and gives
+    // back a response of where to go/what to do.  e.g. requireLogin, asdfa, etc
+    '/api/stripe', requireLogin, async (req, res) => {
       const charge = await stripe.charges.create({
         amount: 500,
         currency: 'usd',

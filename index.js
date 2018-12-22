@@ -13,23 +13,19 @@ const app = express();
 //   res.send({ bye: 'buddy'});
 // });
 
+//MIDDLEWARES modify REQUEST after REQUEST has come
+         //       in and passed through Express App.
 app.use(bodyParser.json());
-
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
     keys: [keys.cookieKey]
   })
 );
+app.use( passport.initialize() );
+app.use( passport.session() );
 
-app.use(
-  passport.initialize()
-);
-
-app.use(
-  passport.session()
-);
-
+//Then we define our routers for  the modified REQUEST to be routed by.
 require('./routes/authRoutes')(app); /* the require statement essentially
                                        returns the function from authRoutes.js,
                                        and then the (app) gets provided as the

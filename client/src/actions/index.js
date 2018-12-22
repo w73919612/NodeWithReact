@@ -8,7 +8,8 @@ export const fetchUser = () => async dispatch => {
 };
 
 export const handleToken = (token) => async dispatch => {
+  //The response to this call is the updated user model
   const res = await axios.post('/api/stripe', token);
-
+  //Dispatch an action of type: FETCH_USER, with the updated data.
   dispatch({ type: FETCH_USER, payload: res.data });
 }
