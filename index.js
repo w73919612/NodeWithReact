@@ -32,5 +32,15 @@ require('./routes/authRoutes')(app); /* the require statement essentially
                                        argument for that function. */
 require('./routes/billingRoutes')(app);
 
+if (process.env.NODE_ENV === 'production') {
+  //Make sure that Express will serve up production assets.
+  // like our main.js file, or our main.css file.
+  express.use(express.static('client/build'));
+  const path = require('path');
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+  //Express will serve up index.html file if it doesn't recognize the route.
+}
 const PORT  = process.env.PORT || 5000;
 app.listen(PORT);
