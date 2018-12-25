@@ -4,7 +4,8 @@ const cookieSession = require('cookie-session');
 const passport = require('passport');
 const keys = require('./config/keys');
 const bodyParser = require('body-parser');
-require('./models/users')
+require('./models/User');
+require('./models/Survey');
 require('./services/passport.js');
 
 mongoose.connect(keys.mongoUri);
@@ -31,6 +32,7 @@ require('./routes/authRoutes')(app); /* the require statement essentially
                                        and then the (app) gets provided as the
                                        argument for that function. */
 require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
   //Make sure that Express will serve up production assets.
