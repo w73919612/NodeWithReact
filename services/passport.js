@@ -65,14 +65,14 @@ passport.use(
         return done(null, existingUser);
       }
 
-      const user = await new User({ googleId: profile.id }).save()
+      const user = await new User({ googleId: profile.id }).save();
       done(null, user);
 
 
 
       //console.log('access token', accessToken);
       //console.log('refresh token', refreshToken);
-      console.log('profile:', profile);
+      //console.log('profile:', profile);
     }
   )
 );

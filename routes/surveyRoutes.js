@@ -26,7 +26,8 @@ module.exports = app => {
       //with new syntax, the map function can be simplified:
         //recipients: recipients.split(',').map(email => ({ email })),
       //however because there may be some leading/trailing whitespace:
-      recipients: recipients.split(',').map(email => ({ email: email.trim() })),
+      //recipients: recipients.split(',').map(email => ({ email: email.trim() })),
+      recipients: recipients.split(',').map(email => ({ email })),
       _user: req.user.id,
       dateSent: Date.now()
     });
@@ -35,10 +36,11 @@ module.exports = app => {
 
     try {
       await mailer.send();
-      await survey.save()
+      await survey.save();
       req.user.credits -= 1;
       const user = await req.user.save();
-      req.send(user);
+      res.send(user);  //bug fix here after lecture 168. Changed from req to
+                       //    res. Then the redirect to /surveys worked.
     } catch (err) {
       res.status(422).send(err);
     }

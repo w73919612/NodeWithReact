@@ -2,11 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
-const keys = require('./config/keys');
 const bodyParser = require('body-parser');
+const keys = require('./config/keys');
 require('./models/User');
 require('./models/Survey');
-require('./services/passport.js');
+require('./services/passport');
 
 mongoose.connect(keys.mongoUri);
 const app = express();
