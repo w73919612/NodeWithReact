@@ -9,7 +9,7 @@ renderContent() {
   //this.props.auth is being filled by our authReducer.
   switch (this.props.auth) {
     case null:
-      return 'Still Deciding';
+      return;
     case false:
       return <li><a href="/auth/google">Login with Google</a></li>;
     default:

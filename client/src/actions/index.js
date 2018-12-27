@@ -7,13 +7,16 @@ export const fetchUser = () => async dispatch => {
   dispatch({ type: FETCH_USER, payload: res.data });
 };
 
-export const handleToken = (token) => async dispatch => {
+export const handleToken = token => async dispatch => {
   //The response to this call is the updated user model
   const res = await axios.post('/api/stripe', token);
   //Dispatch an action of type: FETCH_USER, with the updated data.
   dispatch({ type: FETCH_USER, payload: res.data });
 };
 
-export const submitSurvey = values => {
-  return { type: 'submit_survey' }; //this doesn't do anything - placeholder
+export const submitSurvey = (values, history) => async dispatch => {
+  const res = await axios.post('/api/surveys', values);
+
+  history.push('/surveys');
+  dispatch({ type: FETCH_USER, payload: res.data });
 };
