@@ -74,35 +74,34 @@ module.exports = app => {
     // console.log(uniqueEvents);
 
     // Now lets use the lodash chain() funtion to refactor the above:
-    choice = 'yes' || 'no';
     const events = _.chain(req.body)
       .map(({ email, url }) => {
         const match = p.test(new URL(url).pathname);
         if (match) {
-          return {email, surveyId: match.surveyId, choice: match.choice}
+          return {email, surveyId: match.surveyId, choice: match.choice};
         }
       })
       .compact()
       .uniqBy('email', 'surveyId')
-      .each(event => {
+      .each(({ surveyId, email, choice }) => {
         //instead of findOne()
-        Survey.updateOne({
-          _id: event.surveyId,
-          recipients: {
-            $elemMatch: { email: email, responded: false }
+        Survey.updateOne(
+          {
+            _id: surveyId,
+            recipients: {
+              $elemMatch: { email: email, responded: false }
           }
-        }, {
+        },
+        {
           $inc: { [choice]: 1},
           $set: { 'recipients.$.responded': true }
-        }).exec();
+        }
+      ).exec();
       })
       .value();
+
     console.log(events);
-
-
-
     res.send({});
-
   });
   app.post('/api/surveys', requireLogin, requireCredits, async (req,res) => {
     const { title, subject, body, recipients } = req.body;
@@ -120,8 +119,7 @@ module.exports = app => {
       //with new syntax, the map function can be simplified:
         //recipients: recipients.split(',').map(email => ({ email })),
       //however because there may be some leading/trailing whitespace:
-      //recipients: recipients.split(',').map(email => ({ email: email.trim() })),
-      recipients: recipients.split(',').map(email => ({ email })),
+      recipients: recipients.split(',').map(email => ({ email: email.trim() })),
       _user: req.user.id,
       dateSent: Date.now()
     });
