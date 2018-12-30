@@ -7,12 +7,12 @@ const _ = require('lodash');  // by convention we us _ for lodash variable
 
 // 1. const Path = require('path-parser').default;
 // 2. In your surveyRoutes.js change the require import to:
- const { Path } = require('path-parser');
+// const { Path } = require('path-parser');
 // 3. Downgrade your path-parser module and leave the import as it is:
 // npm uninstall --save path-parser
 // npm install --save path-parser@2.0.2
 //DONT USE THIS (unless choosing option(3)):const Path = require('path-parser');
-
+const Path = require('path-parser').default;
 
 const { URL } = require ('url'); //url library has a bunch of helpers but we are
                                 // desstructuring it to just use the URL helper.
@@ -29,80 +29,25 @@ module.exports = app => {
   });
 
   app.post('/api/surveys/webhooks', (req,res) => {
-    //  console.log(req.body);
-    //  res.send({});
+  //  console.log(req.body);
+  //  res.send({});
 
-    // iterate over event with map function from lodash
-
-    //CODE: const events = _.map(req.body, event => {
-    //CODE: const pathname = new URL(event.url).pathname;
-
+  // iterate over event with map function from lodash
+    const events = _.map(req.body, (event) => {
+    const pathname = new URL(event.url).pathname;
     //now we give pattern to look for in the url passed to us in request. The
     // words with ":" before them are variables we will store what the pattern
     // starting with /api/surveys/ returns.
-
-    //CODE: const p = new Path('/api/surveys/:surveyId/:choice');
-
+    const p = new Path('/api/surveys/:surveyId/:choice');
     //console.log(p.test(pathname)); //console spits:
                       //{ surveyId: '5c2806a8369bed3f2026b693', choice: 'yes' }
+    const match = p.test(pathname);
+    if (match) {
+      return {email: event.email, surveyId: match.surveyId, choice: match.choice}
+    }
+  });
 
-    //CODE: const match = p.test(pathname);
-    //CODE: if (match) {
-    //CODE:   return {email: event.email, surveyId: match.surveyId, choice: match.choice}
-    //CODE: }
-
-    //Lets change to use simpler ES2015 syntax:
-    // ========================================
-    // don't need to create a new path pattern object every time.
-   const p = new Path('/api/surveys/:surveyId/:choice');
-    // // we realize we only care about getting email and url props off of event:
-    // const events = _.map(req.body, ({ email, url }) => {
-    //   // so this property becomes just the variable 'url'.
-    //   // we can't desstructure match to be { surveyId, choice } because if test()
-    //   //   doesn't find a match, it will return null and then this would throw an
-    //   //   error.
-    //   // Also, we created pathname variable and then immediately passed it, so
-    //   //  we don't really need the variable:
-    //   const match = p.test(new URL(url).pathname);
-    //   if (match) {
-    //     // can condense to email: email, but because prop/value are same word: condense to:
-    //     return {email, surveyId: match.surveyId, choice: match.choice}
-    //   }
-    // });
-    // const compactEvents = _.compact(events); // deletes undefined records
-    // const uniqueEvents = _.uniqBy(compactEvents, 'email', 'surveyId');
-    // console.log(uniqueEvents);
-
-    // Now lets use the lodash chain() funtion to refactor the above:
-    choice = 'yes' || 'no';
-    const events = _.chain(req.body)
-      .map(({ email, url }) => {
-        const match = p.test(new URL(url).pathname);
-        if (match) {
-          return {email, surveyId: match.surveyId, choice: match.choice}
-        }
-      })
-      .compact()
-      .uniqBy('email', 'surveyId')
-      .each(event => {
-        //instead of findOne()
-        Survey.updateOne({
-          _id: event.surveyId,
-          recipients: {
-            $elemMatch: { email: email, responded: false }
-          }
-        }, {
-          $inc: { [choice]: 1},
-          $set: { 'recipients.$.responded': true }
-        }).exec();
-      })
-      .value();
-    console.log(events);
-
-
-
-    res.send({});
-
+  console.log(events);
   });
   app.post('/api/surveys', requireLogin, requireCredits, async (req,res) => {
     const { title, subject, body, recipients } = req.body;
