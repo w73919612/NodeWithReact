@@ -5,10 +5,12 @@ import { reducer as reduxForm } from 'redux-form'; //ES2015 syntax allows us to
                       // perhaps "reducer" is too generic for our code, so we
                       // will use "as reduxForm" to make it more clear in our
                       // code.
-                      
+
 import authReducer from './authReducer';
+import surveysReducer from './surveysReducer';
 
 export default combineReducers ({
   auth: authReducer,
-  form: reduxForm
+  form: reduxForm,
+  surveys: surveysReducer
 });

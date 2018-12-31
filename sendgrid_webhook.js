@@ -1,7 +1,7 @@
 var localtunnel = require('localtunnel');
-localtunnel(5000, { subdomain: 'asdfavnnoxxxxh' }, function(err, tunnel) {
+localtunnel(5000, { subdomain: 'ewcefasdrefa' }, function(err, tunnel) {
   console.log('LT running')
-  console.log(tunnel)
+  console.log('TUNNEL.URL: ' + tunnel.url)
 });
 // "webhook": "forever sendgrid_webhook.js"
 // "webhook": "lt -p 5000 -s asdfavnnoxxxxh",
